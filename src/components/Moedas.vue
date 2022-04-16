@@ -30,7 +30,7 @@ export default{
                     }
                     this.moeda.push({
                         name: this.name,
-                        valor: '7'
+                        valor: ''
                         
                     });
                     this.name ="";
