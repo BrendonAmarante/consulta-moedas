@@ -42,7 +42,10 @@ export default{
                     try {
                              axios
                             .get("https://rest.coinapi.io/v1/assets?filter_asset_id="+ element , { headers: {"X-CoinAPI-Key": apikey}})
-                            .then (response => (this.cadeira =[ response.data ]))
+                            .then (response =>{
+                                this.cadeira = [response.data]
+                                this.atribuirValores()
+})
                             console.log(this.cadeira)
                             
                             this.atribuirValores()
