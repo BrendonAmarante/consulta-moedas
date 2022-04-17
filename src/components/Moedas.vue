@@ -1,16 +1,14 @@
 <template>
      <div id ="app"> 
+         
          <h1>Moedas</h1><br>
-            
             <input type="text" placeholder="Nome da Moeda" name="author" v-model="name">
             <button type="submit" v-on:click="adicionarMoeda" >Adicionar</button>
+            
             <br> <br>
-            <div id="mensagem">
-               <span class="comment__author">Moeda: <strong>BTC</strong></span><br>  
-               <p>{{valorBTC}}</p>
-            </div>
             <div id="mensagem" v-for="(comment, index) in listaDeMoedas" v-bind:key="index">
-               <span class="comment__author">Moeda: <strong>{{comment.name}}</strong></span><br>  
+               <span class="comment__author">Moeda: <strong>{{comment.name}}</strong></span><br>
+
                <p>{{comment.valor}}</p>             
                 <button v-on:click="removerMoeda(index)">Remover Moeda</button>
                 <br>
@@ -20,7 +18,7 @@
 
 <script>
 import axios from "axios";
-                  
+
 
 export default{
     name: Comment,
@@ -29,30 +27,40 @@ export default{
                     info: null,
                     moeda: [],
                     name: '',
-                    valor: '',
-                    valorBTC: "",
-                                                 
+                    valor: 0,
+                    cadeira: 0
+                       
                 }
-            },mounted() {
-                axios
-                .get("https://rest.coinapi.io/v1/exchangerate/BTC/USD", { headers: {"X-CoinAPI-Key": "82AD1ED4-EA0A-4F77-AFA2-7B894C2AA95C"}})
-                .then(response => (this.valorBTC = response.data.rate))
+            
             },
+
             methods: {
                 adicionarMoeda(){
                     if ( this.name.trim()===''){
                         return;
                     }
+                   
+                      axios
+                        .get("https://rest.coinapi.io/v1/exchangerate/"+ this.name +"/USD", { headers: {"X-CoinAPI-Key": "9F6E1E03-4C3B-4854-8F1E-63E24538A0A0"}})
+                        .then(response => (this.valor = response.data.rate))
+                        
+                    if (this.valor.length===0){
+                            return
+                        }
+                    
                     this.moeda.push({
                         name: this.name,
-                        valor: ''
+                        valor: this.valor
                         
                     });
-                    this.name ="";
+                    this.cadeira = this.cadeira + 1,
+                    this.name ="",
+                    this.valor= 0
                 },
                 removerMoeda(index){
                     this.moeda.splice(index,1);
                 }
+
             },
             computed: {
                 listaDeMoedas(){
