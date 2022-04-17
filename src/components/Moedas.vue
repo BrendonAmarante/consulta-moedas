@@ -1,6 +1,6 @@
 <template>
      <div id ="app"> 
-         
+      
          <h1>Moedas</h1><br>
             <input type="text" placeholder="Nome da Moeda" name="author" v-model="name">
             <button type="submit" v-on:click="adicionarMoeda" >Adicionar</button>
@@ -19,14 +19,14 @@
 <script>
 
 import axios from "axios";
-let apikey = "62E83DAB-B91A-4A30-8439-0A771F242400"
+let apikey = "345C41E5-6578-4FF2-B4A3-2E3F34B05CAF"
 
 export default{
     name: Comment,
     data() {
                 return {
                     info: null,
-                    moeda: [{ "name": "BTC", "valor": "" }, { "name": "SPG", "valor": "" }, { "name": "SPE", "valor": "" }, { "name": "LUS", "valor": "" }, { "name": "WEMIX", "valor": "" },{ "name": "BCOIN", "valor": "" }],
+                    moeda: [{ "name": "BTC", "valor": "" }, { "name": "SPG", "valor": "" }, { "name": "SPE", "valor": "" }, { "name": "WEMIX", "valor": "" },{ "name": "BCOIN", "valor": "" }],
                     name: '',
                     valor: '',
                     siglas: "",
@@ -38,19 +38,31 @@ export default{
 
             methods: {
                 mounted(element) {
-                    console.log(element)
+                   console.log(element)
                     try {
                              axios
                             .get("https://rest.coinapi.io/v1/assets?filter_asset_id="+ element , { headers: {"X-CoinAPI-Key": apikey}})
-                            .then (response => (this.cadeira = response))
+                            .then (response => (this.cadeira =[ response.data ]))
                             console.log(this.cadeira)
-
-                            if (typeof this.cadeira=== "undefined"){
-                               console.log("AAAAAAA UNDEFINED")
-                            }
+                            
+                            this.atribuirValores()
+                            
                         } catch (error) {
                             console.log(error)
                         }
+                
+                },
+                atribuirValores(){
+                        this.cadeira[0].forEach(api => {
+                            
+                            this.moeda.forEach(mylist => {
+                                
+                                if (mylist.name === api.asset_id){
+                                    console.log(api,mylist)
+                                    mylist.valor = api.price_usd
+                                }
+                            });
+                        });
                 },
                 atualizarMoedas(){
                     this.nome_moeda = ''
@@ -85,6 +97,7 @@ export default{
                 listaDeMoedas(){
                     return this.moeda.map(comment => ({
                         ...comment,
+                       
                     }))
                 }
             }
