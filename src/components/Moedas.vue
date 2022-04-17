@@ -9,7 +9,7 @@
             <div id="mensagem" v-for="(comment, index) in listaDeMoedas" v-bind:key="index">
                <span class="comment__author">Moeda: <strong>{{comment.name}}</strong></span><br>
 
-               <p>{{comment.valor}}</p>             
+               <p>Cotação ${{comment.valor}}</p>             
                 <button v-on:click="removerMoeda(index)">Remover Moeda</button>
                 <br>
             </div>
