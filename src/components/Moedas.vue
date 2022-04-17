@@ -19,7 +19,7 @@
 <script>
 
 import axios from "axios";
-let apikey = "345C41E5-6578-4FF2-B4A3-2E3F34B05CAF"
+let apikey = "7DC9D883-85FF-44B9-837A-D19EDC4D044C"
 
 export default{
     name: Comment,
