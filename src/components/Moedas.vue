@@ -19,7 +19,7 @@
 <script>
 
 import axios from "axios";
-let apikey = "7DC9D883-85FF-44B9-837A-D19EDC4D044C"
+let apikey = "923640C8-4099-47DA-90A7-711978D813C4"
 
 export default{
     name: Comment,
@@ -30,38 +30,46 @@ export default{
                     name: '',
                     valor: '',
                     siglas: "",
-                    nome_moeda: ""
-                    
+                    nome_moeda: "",
+                    verificar_erro : ""
                 }
             
             },
 
             methods: {
-                mounted(element) {
-                   console.log(element)
-                    try {
+                mounted(element,operador) {
+                   if (operador == 1){
+                       
                              axios
                             .get("https://rest.coinapi.io/v1/assets?filter_asset_id="+ element , { headers: {"X-CoinAPI-Key": apikey}})
                             .then (response =>{
                                 this.cadeira = [response.data]
-                                this.atribuirValores()
-})
-                            console.log(this.cadeira)
-                            
-                            this.atribuirValores()
-                            
-                        } catch (error) {
-                            console.log(error)
-                        }
+                                this.atribuirValores()})
+                   } else{
+                       axios
+                            .get("https://rest.coinapi.io/v1/exchangerate/"+ element +"/USD" , { headers: {"X-CoinAPI-Key": apikey}})
+                            .then (response =>{
+                                this.cadeira = response
+                                console.log(this.cadeira)
+                                
+                                    this.moeda.forEach(mylist => {
+                                        if (element === this.cadeira.data.asset_id_base){
+                                            mylist.valor = this.cadeira.data.rate
+                                        }
+                                    });
+                                
+                                })
+                            .catch(error =>{ this.verificar_erro= error
+                            this.moeda.splice(-1,1)}
+                            )
+
+                   }
                 
                 },
                 atribuirValores(){
                         this.cadeira[0].forEach(api => {
-                            
-                            this.moeda.forEach(mylist => {
-                                
+                            this.moeda.forEach(mylist => { 
                                 if (mylist.name === api.asset_id){
-                                    console.log(api,mylist)
                                     mylist.valor = api.price_usd
                                 }
                             });
@@ -69,27 +77,30 @@ export default{
                 },
                 atualizarMoedas(){
                     this.nome_moeda = ''
-                   this.moeda.forEach(element => {
-                       
-                       this.nome_moeda = this.nome_moeda + element.name + ","
-                       
-                    });
+                    this.moeda.forEach(element => {
+                    this.nome_moeda = this.nome_moeda + element.name + ","});
                     this.nome_moeda = this.nome_moeda.substring(0, this.nome_moeda.length - 1)
-                    this.mounted(this.nome_moeda)
+                    this.mounted(this.nome_moeda,1)
+                
+                             
+                
                 },
                 adicionarMoeda(){
                     if ( this.name.trim()===''){
                         return;
                     }
-
+                    this.name = this.name.toUpperCase()
+                    
                     this.moeda.push({
                         name: this.name,
                         valor: this.valor
-                        
                     });
+                    this.mounted(this.name,0)
                     this.name ="",
-                    this.valor= "",
-                    this.atualizarMoedas(this.moeda)
+                    this.valor= ""
+                    
+                   
+                   
                 },
                 removerMoeda(index){
                     this.moeda.splice(index,1);
