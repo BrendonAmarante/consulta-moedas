@@ -51,10 +51,14 @@ export default{
                             .then (response =>{
                                 this.cadeira = response
                                 console.log(this.cadeira)
-                                
+                                console.log(this.cadeira.data.asset_id_base)
                                     this.moeda.forEach(mylist => {
-                                        if (element === this.cadeira.data.asset_id_base){
-                                            mylist.valor = this.cadeira.data.rate
+                                        console.log(mylist.name),
+                                        console.log(this.cadeira.data.asset_id_base)
+                                        if (this.cadeira.data.asset_id_base === mylist.name){
+                                            mylist.valor = this.cadeira.data.rate,
+                                            console.log("aquiiiiiiiii")
+                                            this.atualizarMoedas()
                                         }
                                     });
                                 
